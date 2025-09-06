@@ -12,7 +12,7 @@
 I had never used git hub apart from uploading a website before so this was all new to me. Initially I was very confused as to what the purpose was. However I learned why github is important as well as important console commands such as git push and git commit. It will take a bit more practice but I can see how using github could be very beneficial in the long run. 
 
 These commands are crucial to git:
-'''
+```
 git status
 
 git add test.md
@@ -26,7 +26,7 @@ git pull
 cd ~/byu/cs260
 git clone https://github.com/YOURACCOUNTHERE/startup.git
 cd startup
-'''
+```
 Status will check whether there are discrepencies between the github version and the local version. Add will put the file in the staging area". Commit will snapshot the staged files and everything -am is a message that is included in the commit. Push pushes the changes to the original repository. Fetch gives information about the original repository. Pull will update the local files to match the repository. Clone will clone the repository into a directory, **make sure to be cd'ed into the correct directory**.  
 
 ## AWS
