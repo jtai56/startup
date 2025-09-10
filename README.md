@@ -1,4 +1,4 @@
-# Your startup name here
+# Level Up
 
 [My Notes](notes.md)
 
@@ -19,45 +19,44 @@ This change was on github.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] Proper use of Markdown
+- [x] A concise and compelling elevator pitch
+- [x] Description of key features
+- [x] Description of how you will use each technology
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+You've probably heard that it takes 10,000 hours to master a skill. Have you ever wondered how many hours you've invested in something? Have you ever wondered what kind of progress you have made? Ever wonder what skills your friends are working on? Level Up is github version control but for humans. It allows us to track how much time has been put into specific skills and note our progress along the way. You can set goals, track habits and work with friends all to help you become the best version of yourself you can be. Six months to sexy has never been so easy. 
 
 ### Design
 
-![Design image](placeholder.png)
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-```mermaid
-sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
-```
+![Design image](design.jpg)
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Secure login over HTTPS
+- Realtime feedback when others begin new skills or reach milestones
+- Progress is saved
+- Ability to add or subtract number of hours invested in a skill
+- Ability to add new skills a user wants to begin working on
+- Ability to comment what a user has learned at certain point in time
+
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - Uses correct HTML structure for the application. Two HTML pages. One for the login and one for the progress tracker.
+- **CSS** - Stylishly design the application so that it looks good on different screen sizes, demonstrates a consistent color scheme and is responsive.
+- **React** - Provides login, increasing/ decreasing time spent on skill, comment, real time feedback of other users functionalities. 
+- **Service** - Backend service endpoints for:
+    - login
+    - retrieving progress data
+    - relaying progress data to others
+    - API call to inspirational quotes
+- **DB/Login** - Stores users progress and milestones
+- **WebSocket** - Realtime data from other users, everytime a user starts a new skill or hits a milestone
 
 ## 🚀 AWS deliverable
 
