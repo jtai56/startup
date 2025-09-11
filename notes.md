@@ -31,8 +31,18 @@ Status will check whether there are discrepencies between the github version and
 
 ## AWS
 
-My IP address is: 54.81.96.130
-Launching my AMI I initially put it on a private subnet. Even though it had a public IP address and the security group was right, I wasn't able to connect to it.
+My IP address is: http://54.81.53.56/
+One hiccup I ran into was I was accidentally searching https://54.81.53.56/ instead of http://54.81.53.56/. As it is right now, it is not secured https, it is unsecure. 
+An elastic IP address is one that doesn't change even when the server is turned off. Otherwise it would change every time.
+To SSH into my server it looks like
+
+```
+ssh -i [key pair file] ubuntu@[ip address]
+ssh -i ~/keys/production.pem ubuntu@53.104.2.123
+
+chmod  600 yourkeypairfile.pem
+```
+Chmod restricts permissions on the file to make it more secure. 
 
 ## Caddy
 
