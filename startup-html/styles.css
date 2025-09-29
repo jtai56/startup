@@ -34,5 +34,23 @@ header{
 }
 
 .navbar a:hover{
-    color: aliceblue;
+}
+main{
+    flex:1 calc(100vh - 150px);
+}
+footer{
+    flex: 0 50px;
+    background-color: grey;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+footer container{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-left: 20px;
+    
 }
