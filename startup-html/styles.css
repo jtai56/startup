@@ -1,0 +1,38 @@
+body{
+    display: flex;
+    flex-direction: column;
+}
+header{
+    flex: 1 100px;
+    display: flex;
+    background-color: grey;
+    gap: 30px;
+    padding: 20px;
+    
+
+}
+
+.header h1{
+    padding: 20 px;
+    color: white;
+
+    align-self: center;
+    
+}
+.navbar ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar a{
+    font-weight: bold;
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+.navbar a:hover{
+    color: aliceblue;
+}
