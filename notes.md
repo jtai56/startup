@@ -173,6 +173,87 @@ I also used SVG to make the icon and logo for the app. This turned out to be a p
 
 Setting up Vite and React was pretty simple. I had a bit of trouble because of conflicting CSS. This isn't as straight forward as you would find with Svelte or Vue, but I made it work in the end. If there was a ton of CSS it would be a real problem. It sure was nice to have the code structured in a more usable way.
 
+Here is some really important steps that helped me understand:
+1. Install and configure Vite
+1. Reorganize the code
+1. Convert to React Bootstrap
+1. Enable React
+1. Create app component
+1. Create view components
+1. Create the router
+1. Convert HTML to React components
+1. Replace deployment script
+
+The structure of the files should look like this
+```sh
+├─ public                      # Static assets used in the app
+│   ├─ favicon.ico
+│   └─ placeholder.jpg
+└─ src                         # Frontend React code
+    ├─ app.css                 # Top level styles
+    ├─ about                   # About component
+    ├─ login                   # Login component
+    ├─ play                    # Game play component
+    └─ scores                  # Scores component
+
+```
+The app.css houses top level styling. App.jsx houses header and footer, aka things you don't want ot have to reload everytime. 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+
+    <title>Simon React</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/index.jsx"></script>
+  </body>
+</html>
+```
+This is the key to the index.html. Everything will come from here since this is where the shadow root is created. 
+
+**app.jsx**
+
+```jsx
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './app.css';
+
+export default function App() {
+  return <div className="body bg-dark text-light">App will display here</div>;
+}
+```
+App.Jsx should initally look like this. But replace the "app will display here" with the headers and the footers. 
+
+```jsx
+ <main>App components go here</main>
+
+ // to
+```jsx
+<a className="nav-link" href="play.html">Play</a>
+
+// to
+
+<NavLink className='nav-link' to='play'>Play</NavLink>
+```
+
+<Routes>
+  <Route path='/' element={<Login />} exact />
+  <Route path='/play' element={<Play />} />
+  <Route path='/scores' element={<Scores />} />
+  <Route path='/about' element={<About />} />
+  <Route path='*' element={<NotFound />} />
+</Routes>
+```
+Code for routes.
+
 ## React Part 2: Reactivity
 
 This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
@@ -198,3 +279,36 @@ Handling the toggling of the checkboxes was particularly interesting.
   ))}
 </div>
 ```
+```js
+function NotFound() {
+  return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+}
+```
+This is in the even that the path is not found. 
+
+```sh
+├─ LICENSE
+├─ README.md
+├─ deployReact.sh              # React specific deployment
+├─ index.html                  # Single HTML file for the App
+├─ index.jsx                   # Loads the top level component
+├─ package.json                # Defines dependent modules
+├─ public                      # Static assets used in the app
+│   ├─ favicon.ico
+│   └─ placeholder.jpg
+└─ src                         # Frontend React code
+    ├─ app.jsx                 # Top level component
+    ├─ app.css
+    ├─ about                   # About component
+    │   ├─ about.css
+    │   └─ about.jsx
+    ├─ login                   # Login component
+    │   └─ login.jsx
+    ├─ play                    # Game play component
+    │   ├─ play.jsx
+    │   └─ play.css
+    └─ scores                  # Scores component
+        ├─ scores.css
+        └─ scores.jsx
+```
+High level overview of simon and what it looks like after everything is finished.
