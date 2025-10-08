@@ -2,7 +2,7 @@ import React from 'react';
 
 export function Login() {
   return (
-    <main>
+    <main className = 'main'>
         <container>
             <h1>Lets repo your progress.</h1>
             <h1>Github but for pushing your life forward.</h1>
