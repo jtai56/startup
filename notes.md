@@ -254,12 +254,6 @@ App.Jsx should initally look like this. But replace the "app will display here" 
 ```
 Code for routes.
 
-## React Part 2: Reactivity
-
-This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
-
-Handling the toggling of the checkboxes was particularly interesting.
-
 ```jsx
 <div className="input-group sound-button-container">
   {calmSoundTypes.map((sound, index) => (
@@ -312,3 +306,83 @@ This is in the even that the path is not found.
         └─ scores.jsx
 ```
 High level overview of simon and what it looks like after everything is finished.
+
+## React Part 2: Reactivity
+
+Basic Javascript Functions:
+// print to console
+console.log("hello world)
+//timers
+console.time('demo time');
+for (let i = 0; i < 10000000; i++) {}
+// ... some code that takes a long time.
+console.timeEnd('demo time');
+// OUTPUT: demo time: 12.74 ms
+// Counter function 
+console.count('a');
+// OUTPUT: a: 1
+console.count('a');
+// OUTPUT: a: 2
+console.count('b');
+// OUTPUT: b: 1
+
+Parameters:
+function labeler(value, title = 'title') {
+  console.log(`${title}=${value}`);
+}
+
+labeler();
+// OUTPUT: title=undefined
+
+labeler('fish');
+// OUTPUT: title=fish
+
+labeler('fish', 'animal');
+// OUTPUT: animal=fish
+
+Anonymous Functions:
+// Function that takes a function as a parameter
+function doMath(operation, a, b) {
+  return operation(a, b);
+}
+
+// Anonymous function assigned to a variable
+const add = function (a, b) {
+  return a + b;
+};
+
+console.log(doMath(add, 5, 3));
+// OUTPUT: 8
+
+// Anonymous function assigned to a parameter
+console.log(
+  doMath(
+    function (a, b) {
+      return a - b;
+    },
+    5,
+    3
+  )
+);
+// OUTPUT: 2
+
+Named functions are hoisted (the top of the scope which means they can be run even before they are declared), anonymous functions are unhoisted.
+
+Local Storage:
+
+Local storage allows the storage and retrieval of data on a users browser across sessions and renderings. This even works between different html pages. 
+
+This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
+
+Handling the toggling of the checkboxes was particularly interesting.
+There are four main functions that can be used with localStorage.
+
+| Function             | Meaning                                      |
+| -------------------- | -------------------------------------------- |
+| setItem(name, value) | Sets a named item's value into local storage |
+| getItem(name)        | Gets a named item's value from local storage |
+| removeItem(name)     | Removes a named item from local storage      |
+| clear()              | Clears all items in local storage            |
+
+A local storage value must be of type `string`, `number`, or `boolean`. If you want to store a JavaScript object or array, then you must first convert it to a JSON string with `JSON.stringify()` on insertion, and parse it back to JavaScript with `JSON.parse()` when retrieved.
+
