@@ -310,6 +310,7 @@ High level overview of simon and what it looks like after everything is finished
 ## React Part 2: Reactivity
 
 Basic Javascript Functions:
+```
 // print to console
 console.log("hello world)
 //timers
@@ -325,8 +326,10 @@ console.count('a');
 // OUTPUT: a: 2
 console.count('b');
 // OUTPUT: b: 1
+```
 
 Parameters:
+```
 function labeler(value, title = 'title') {
   console.log(`${title}=${value}`);
 }
@@ -339,8 +342,9 @@ labeler('fish');
 
 labeler('fish', 'animal');
 // OUTPUT: animal=fish
-
+```
 Anonymous Functions:
+```
 // Function that takes a function as a parameter
 function doMath(operation, a, b) {
   return operation(a, b);
@@ -365,9 +369,60 @@ console.log(
   )
 );
 // OUTPUT: 2
+```
 
 Named functions are hoisted (the top of the scope which means they can be run even before they are declared), anonymous functions are unhoisted.
 
+Arrow Function:
+```
+const a = [1, 2, 3, 4];
+
+// standard function syntax
+a.sort(function (v1, v2) {
+  return v1 - v2;
+});
+
+// arrow function syntax
+a.sort((v1, v2) => v1 - v2);
+
+//return functions work like this
+() => 3;
+// RETURNS: 3
+
+() => {
+  3;
+};
+// RETURNS: undefined
+
+() => {
+  return 3;
+};
+// RETURNS: 3
+```
+Arrow functions and usestate:
+```
+function App() {
+  const [count, setCount] = React.useState(0);
+
+  function counterOpFactory(op) {
+    return () => setCount((prevCount) => op(prevCount));
+  }
+
+  const incOp = counterOpFactory((c) => c + 1);
+  const decOp = counterOpFactory((c) => c - 1);
+  const tenXOp = counterOpFactory((c) => c * 10);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={incOp}>n++</button>
+      <button onClick={decOp}>n--</button>
+      <button onClick={tenXOp}>n*10</button>
+    </div>
+  );
+}
+```
+[count,setcount] = React.useState(0) means set the count at zero. Setcount is a function that rerenders the object (its very complicated so don't worry about it for now).
 Local Storage:
 
 Local storage allows the storage and retrieval of data on a users browser across sessions and renderings. This even works between different html pages. 
