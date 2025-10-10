@@ -440,4 +440,184 @@ There are four main functions that can be used with localStorage.
 | clear()              | Clears all items in local storage            |
 
 A local storage value must be of type `string`, `number`, or `boolean`. If you want to store a JavaScript object or array, then you must first convert it to a JSON string with `JSON.stringify()` on insertion, and parse it back to JavaScript with `JSON.parse()` when retrieved.
+Object sample (class == map == dictionary):
+```
+const obj = {
+  a: 3,
+  b: 'fish',
+};
 
+console.log(Object.entries(obj));
+// OUTPUT: [['a', 3], ['b', 'fish']]
+console.log(Object.keys(obj));
+// OUTPUT: ['a', 'b']
+console.log(Object.values(obj));
+// OUTPUT: [3, 'fish']
+```
+
+Constructor sample:
+```
+function Person(name) {
+  return {
+    name: name,
+  };
+}
+
+const p = new Person('Eich');
+console.log(p);
+// OUTPUT: {name: 'Eich'}
+```
+Class sample
+```
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+// you can also do like below to make the func/ property private
+// #name
+// constructor(name){
+//    this.#name = name;
+//} 
+  log() {
+    console.log('My name is ' + this.name);
+  }
+}
+
+const p = new Person('Eich');
+p.log();
+// OUTPUT: My name is Eich
+```
+Inheritance/ extends sample:
+```
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+
+  print() {
+    return 'My name is ' + this.name;
+  }
+}
+
+class Employee extends Person {
+  constructor(name, position) {
+    super(name);
+    this.position = position;
+  }
+
+  print() {
+    return super.print() + '. I am a ' + this.position;
+  }
+}
+
+const e = new Employee('Eich', 'programmer');
+console.log(e.print());
+// OUTPUT: My name is Eich. I am a programmer
+```
+Settime out/ setinterval:
+```
+setTimeout(() => console.log('time is up'), 2000);
+
+console.log('timeout will happen later');
+```
+Set timeout halts the console.log("time is up") for 2000 miliseconds, keeps executing code beneath it, and then execultes the arrow function once the time is up. Meaning "timeout will happen later" will actually print first!.
+
+Converting Json:
+```const obj = { a: 2, b: 'crockford', c: undefined };
+const json = JSON.stringify(obj);
+const objFromJson = JSON.parse(json);
+
+console.log(obj, json, objFromJson);
+
+// OUTPUT:
+// {a: 2, b: 'crockford', c: undefined}
+// {"a":2, "b":"crockford"}
+// {a: 2, b: 'crockford'}
+```
+Destructuring:
+Only applicable to arrays or objects. This is what is happening when usestate() is called. 
+```
+const a = [1, 2, 4, 5];
+
+// destructure the first two items from a, into the new variables b and c
+const [b, c] = a;
+
+console.log(b, c);
+// OUTPUT: 1, 2
+const [b, c, ...others] = a;
+
+console.log(b, c, others);
+// OUTPUT: 1, 2, [4,5]
+
+//Objects
+const o = { a: 1, b: 'animals', c: ['fish', 'cats'] };
+
+const { a: count, b: type } = o;
+
+console.log(count, type);
+// OUTPUT 1, animals
+
+//Passing default values
+const { a, b = 22 } = {};
+const [c = 44] = [];
+console.log(a, b, c);
+// OUTPUT: undefined, 22, 44
+```
+Hooks:
+Hooks are functions that let you "hook into" React state and lifecycle features from functional components. Provides access to state, props, lifecycle etc.
+Examples:
+```
+//usestate
+function Clicker({ initialCount }) {
+  const [count, updateCount] = React.useState(initialCount);
+  return <div onClick={() => updateCount(count + 1)}>Click count: {count}</div>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Clicker initialCount={3} />);
+
+//useeffect
+function UseEffectHookDemo() {
+  React.useEffect(() => {
+    console.log('rendered');
+  });
+
+  return <div>useEffectExample</div>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<UseEffectHookDemo />);
+// Everytime the component is rendered, console logs rendered.
+
+//use effect cleanup
+function Clicker() {
+  const [count, update] = React.useState(5);
+
+  return (
+    <div onClick={() => update(count - 1)}>
+      Click count: {count}
+      {count > 0 ? <Db /> : <div>DB Connection Closed</div>}
+    </div>
+  );
+}
+
+function Db() {
+  React.useEffect(() => {
+    console.log('connected');
+
+    return function cleanup() {
+      console.log('disconnected');
+    };
+  }, []);
+
+  return <div>DB Connection</div>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Clicker />);
+```
+
+? syntax in JSX:
+```
+condition ? valueIfTrue : valueIfFalse
+```
