@@ -621,3 +621,228 @@ root.render(<Clicker />);
 ```
 condition ? valueIfTrue : valueIfFalse
 ```
+ValueIfTrue will be rendered if condition (how javascript evaluates boolean) is True. Otherwise, it will render ValueIfFalse.
+
+## React Part 2 
+```
+const delay = (msg, wait) => {
+  setTimeout(() => {
+    console.log(msg, wait);
+  }, 1000 * wait);
+};
+
+new Promise((resolve, reject) => {
+  // Code executing in the promise
+  for (let i = 0; i < 3; i++) {
+    delay('In promise', i);
+  }
+});
+
+// Code executing after the promise
+for (let i = 0; i < 3; i++) {
+  delay('After promise', i);
+}
+
+// OUTPUT:
+//   In promise 0
+//   After promise 0
+//   In promise 1
+//   After promise 1
+//   In promise 2
+//   After promise 2
+```
+Set Timeout(() => {function}, duration of timeout in ms); 
+Promise
+```
+const coinToss = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    if (Math.random() > 0.1) {
+      resolve(Math.random() > 0.5 ? 'heads' : 'tails');
+    } else {
+      reject('fell off table');
+    }
+  }, 10000);
+});
+
+let promise = new Promise((resolve, reject) => {
+  // Executor function
+  // Asynchronous code goes here
+});
+```
+The code above creates a cointoss variable and assigns it to a promise object. The format for a promise object:
+```
+let promise = new Promise((resolve, reject) => {
+  // Executor function
+  // Asynchronous code goes here
+});
+```
+
+You cannot use await unless it is called at the top level of the Javascript, or it is a function that uses async. 
+
+```
+async function cow() {
+  return new Promise((resolve) => {
+    resolve('moo');
+  });
+}
+console.log(cow());
+// OUTPUT: Promise {<pending>}
+```
+This is still pending because console log is called immidietely after cow is, not giving time for the promise to be resolve. Await makes it wait:
+```
+console.log(cow());
+// OUTPUT: Promise {<pending>}
+
+console.log(await cow());
+// OUTPUT: moo
+```
+Examples of Async and Await:
+Here the console outputs done before the email and authentication is outputted 
+```
+const httpPromise = fetch('https://simon.cs260.click/api/user/me');
+const jsonPromise = httpPromise.then((r) => r.json());
+jsonPromise.then((j) => console.log(j));
+console.log('done');
+
+// OUTPUT: done
+// OUTPUT: {email: 'bud@mail.com', authenticated: true}
+```
+But using await it will work properly:
+```
+const httpResponse = await fetch('https://simon.cs260.click/api/user/me');
+const jsonResponse = await httpResponse.json();
+console.log(jsonResponse);
+console.log('done');
+
+// OUTPUT: {email: 'bud@mail.com', authenticated: true}
+// OUTPUT: done
+```
+How does caddy work with ports?
+"Your web service, Caddy, is listening on ports 80 and 443. When Caddy gets a request on port 80, it automatically redirects the request to port 443 so that a secure connection is used. When Caddy gets a request on port 443 it examines the path provided in the HTTP request (as defined by the URL) and if the path matches a static file, it reads the file off disk and returns it. If the HTTP path matches one of the definitions it has for a gateway service, Caddy makes a connection on that service's port (e.g. 3000 or 4000) and passes the request to the service.
+
+Internally on your web server, you can have as many web services running as you would like. However, you must make sure that each one uses a different port to communicate on. You run your Simon service on port 3000 and therefore cannot use port 3000 for your startup service. Instead you use port 4000 for your startup service. It does not matter what high range port you use. It only matters that you are consistent and that they are only used by one service."
+
+GET requests:
+They generally take on this form.
+```
+//Syntax
+<verb> <url path, parameters, anchor> <version>
+[<header key: value>]*
+[
+
+  <body>
+]
+//Example
+GET /hypertext/WWW/Helping.html HTTP/1.1  // Version of http that is being used.
+Host: info.cern.ch
+Accept: text/html
+
+// Example output
+
+HTTP/1.1 200 OK
+Date: Tue, 06 Dec 2022 21:54:42 GMT
+Server: Apache
+Last-Modified: Thu, 29 Oct 1992 11:15:20 GMT
+ETag: "5f0-28f29422b8200"
+Accept-Ranges: bytes
+Content-Length: 1520
+Connection: close
+Content-Type: text/html
+
+<TITLE>Helping -- /WWW</TITLE>
+<NEXTID 7>
+<H1>How can I help?</H1>There are lots of ways you can help if you are interested in seeing
+the <A NAME=4 HREF=TheProject.html>web</A> grow and be even more useful...
+```
+
+## Verbs
+
+There are several verbs that describe what the HTTP request is asking for. The list below only describes the most common ones.
+
+| Verb    | Meaning                                                                                                                                                                                                                                                  |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET     | Get the requested resource. This can represent a request to get a single resource or a resource representing a list of resources.                                                                                                                        |
+| POST    | Create a new resource. The body of the request contains the resource. The response should include a unique ID of the newly created resource.                                                                                                             |
+| PUT     | Update a resource. Either the URL path, HTTP header, or body must contain the unique ID of the resource being updated. The body of the request should contain the updated resource. The body of the response may contain the resulting updated resource. |
+| DELETE  | Delete a resource. Either the URL path or HTTP header must contain the unique ID of the resource to delete.                                                                                                                                              |
+| OPTIONS | Get metadata about a resource. Usually only HTTP headers are returned. The resource itself is not returned.                                                                                                                                              |
+
+## Status codes
+- 1xx - Informational.
+- 2xx - Success.
+- 3xx - Redirect to some other location, or that the previously cached resource is still valid.
+- 4xx - Client errors. The request is invalid.
+- 5xx - Server errors. The request cannot be satisfied due to an error on the server.
+
+| Code | Text                                                                                 | Meaning                                                                                                                           |
+| ---- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| 100  | Continue                                                                             | The service is working on the request                                                                                             |
+| 200  | Success                                                                              | The requested resource was found and returned as appropriate.                                                                     |
+| 201  | Created                                                                              | The request was successful and a new resource was created.                                                                        |
+| 204  | No Content                                                                           | The request was successful but no resource is returned.                                                                           |
+| 304  | Not Modified                                                                         | The cached version of the resource is still valid.                                                                                |
+| 307  | Permanent redirect                                                                   | The resource is no longer at the requested location. The new location is specified in the response location header.               |
+| 308  | Temporary redirect                                                                   | The resource is temporarily located at a different location. The temporary location is specified in the response location header. |
+| 400  | Bad request                                                                          | The request was malformed or invalid.                                                                                             |
+| 401  | Unauthorized                                                                         | The request did not provide a valid authentication token.                                                                         |
+| 403  | Forbidden                                                                            | The provided authentication token is not authorized for the resource.                                                             |
+| 404  | Not found                                                                            | An unknown resource was requested.                                                                                                |
+| 408  | Request timeout                                                                      | The request takes too long.                                                                                                       |
+| 409  | Conflict                                                                             | The provided resource represents an out of date version of the resource.                                                          |
+| 418  | [I'm a teapot](https://en.wikipedia.org/wiki/Hyper_Text_Coffee_Pot_Control_Protocol) | The service refuses to brew coffee in a teapot.                                                                                   |
+| 429  | Too many requests                                                                    | The client is making too many requests in too short of a time period.                                                             |
+| 500  | Internal server error                                                                | The server failed to properly process the request.                                                                                |
+| 503  | Service unavailable                                                                  | The server is temporarily down. The client should try again with an exponential back off.                                         |
+
+## Headers
+
+HTTP headers specify metadata about a request or response. This includes things like how to handle security, caching, data formats, and cookies. Some common headers that you will use include the following.
+
+| Header                      | Example                              | Meaning                                                                                                                                                                        |
+| --------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Authorization               | Bearer bGciOiJIUzI1NiIsI             | A token that authorized the user making the request.                                                                                                                           |
+| Accept                      | image/\*                             | The format the client accepts. This may include wildcards.                                                                                                            |
+| Content-Type                | text/html; charset=utf-8             | The format of the content being sent. These are described using standard [MIME](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) types. |
+| Cookie                      | SessionID=39s8cgj34; csrftoken=9dck2 | Key value pairs that are generated by the server and stored on the client.                                                                                                     |
+| Host                        | info.cern.ch                         | The domain name of the server. This is required in all requests.                                                                                                               |
+| Origin                      | cs260.click                          | Identifies the origin that caused the request. A host may only allow requests from specific origins.                                                                           |
+| Access-Control-Allow-Origin | https://cs260.click                  | Server response of what origins can make a request. This may include a wildcard.                                                                                               |
+| Content-Length              | 368                                  | The number of bytes contained in the response.                                                                                                                                 |
+| Cache-Control               | public, max-age=604800               | Tells the client how it can cache the response.                                                                                                                                |
+| User-Agent                  | Mozilla/5.0 (Macintosh)              | The client application making the request.                                                                                                                                     |
+## Cookies
+HTTP is stateless, meaning it has no connection to previous or future requests. One way states are tracked are through cookies. Cookies are set this way.
+```
+HTTP/2 200
+Set-Cookie: myAppCookie=tasty; SameSite=Strict; Secure; HttpOnly
+```
+
+# Fetch
+Fetch takes a URL and returns a promise object. Using .then takes a callback function and runs it with on the promise object. A common one is .json() if the return content is of type "application.json".
+Callback functions are functions passed as arguments to be laterused when a condition is met.
+```
+fetch('https://quote.cs260.click')
+  .then((response) => response.json())
+  .then((jsonResponse) => {
+    console.log(jsonResponse);
+  });
+
+//When a method is not specified using fetch, it defaults to GET.
+
+fetch('https://jsonplaceholder.typicode.com/posts', {
+  method: 'POST',
+  body: JSON.stringify({
+    title: 'test title',
+    body: 'test body',
+    userId: 1,
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+  .then((response) => response.json())
+  .then((jsonResponse) => {
+    console.log(jsonResponse);
+  });`` 
+```
+
