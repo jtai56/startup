@@ -1014,8 +1014,11 @@ byu.style.color = 'green';
 // Explanation: getElementById returns the DOM element. Assigning to variable avoids querying repeatedly.
 ```
 ### What is the opening HTML tag for a paragraph, ordered list, unordered list, second level heading, first level heading, third level heading?
-Paragraph: <p>, Ordered list: <ol>, Unordered list: <ul>, h2: <h2>, h1: <h1>, h3: <h3>
-
+```
+// Paragraph: <p>
+// Ordered list: <ol>
+// Unordered list: <ul>, h2: <h2>, h1: <h1>, h3: <h3>
+```
 ### How do you declare the document type to be html?
 <!DOCTYPE html>
 
