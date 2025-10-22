@@ -62,6 +62,8 @@ export function Log() {
                 </div>
             </div>
         </div>
+        <input type="text" id="" name="Goal Name" placeholder="Whats your next goal?"/>
+
         <br />
         <div className="players">
             <h2>Other Activity:</h2>

@@ -1,17 +1,18 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 
-const [imageURL, setImageURL] = useEffect("Loading Image")
-const [quote, setQuote] = useEffect("Loading Quote...")
-const [author, setAuthor] = useEffect("Loading Author...")
+export function About() {
+  
+  const [imageURL, setImageURL] = useState("Loading Image")
+  const [quote, setQuote] = useState("Loading Quote...")
+  const [author, setAuthor] = useState("Loading Author...")
 
   React.useEffect(() => {
-    setImageURL(`placeholder.jpg`);
+    setImageURL(`download.jpeg`);
     setQuote('A quote has loaded!!');
-    setQuoteAuthor('Psychologist');
+    setAuthor('Psychologist');
   }, []);
 
-export function About() {
   return (
     <main>
       <div id="picture" className="picture-box"><img width="400px" src={imageURL} alt="placeholder" /></div>
