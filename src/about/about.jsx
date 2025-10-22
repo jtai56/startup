@@ -10,11 +10,11 @@ const [author, setAuthor] = useEffect("Loading Author...")
     setQuote('A quote has loaded!!');
     setQuoteAuthor('Psychologist');
   }, []);
-  
+
 export function About() {
   return (
     <main>
-      <div id="picture" className="picture-box"><img width="400px" src="placeholder.png" alt="placeholder" /></div>
+      <div id="picture" className="picture-box"><img width="400px" src={imageURL} alt="placeholder" /></div>
       <div className="aboutText">
         <p>
           You've probably heard that it takes 10,000 hours to master a skill. Have you ever wondered how many hours you've invested in something? Have you ever wondered what kind of progress you have made? Ever wonder what skills your friends are working on? Level Up is github version control but for humans. It allows us to track how much time has been put into specific skills and note our progress along the way. You can set goals, track habits and work with friends all to help you become the best version of yourself you can be. Six months to sexy has never been so easy.
@@ -24,8 +24,8 @@ export function About() {
         </p>
       </div>
       <div className="quote">
-        <div>A motivational quote from the motivational quote api would go here... if I knew how to connect it</div>
-        <div className="author">- Tired developer</div>
+        <div>{quote}</div>
+        <div className="author">- {author}</div>
       </div>
     </main>
   );
