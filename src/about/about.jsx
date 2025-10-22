@@ -1,5 +1,16 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 
+const [imageURL, setImageURL] = useEffect("Loading Image")
+const [quote, setQuote] = useEffect("Loading Quote...")
+const [author, setAuthor] = useEffect("Loading Author...")
+
+  React.useEffect(() => {
+    setImageURL(`placeholder.jpg`);
+    setQuote('A quote has loaded!!');
+    setQuoteAuthor('Psychologist');
+  }, []);
+  
 export function About() {
   return (
     <main>
