@@ -99,10 +99,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 ## 🚀 React part 2: Reactivity deliverable
 
-For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
+For this deliverable I did the following. 
+I added react capability for login, log, about and leaderboards. The api call and websockets functionalities are placeholders and show what it might look like. 
+I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [X] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
+- [X] **Hooks** - I did not complete this part of the deliverable.
 
 ## 🚀 Service deliverable
 
