@@ -124,3 +124,12 @@ footer a{
     background-color: whitesmoke;
     border-radius: 5%;
 }
+
+#logMenu{
+    display: flex;
+    margin: 30px;
+}
+
+#createLogButton{
+    margin-left: 10px ;
+}

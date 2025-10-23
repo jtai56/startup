@@ -1,6 +1,11 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 
+
+function getQuote() {
+  return {author: "Quoter", quote: "A quote has loaded"}
+}
+
 export function About() {
   
   const [imageURL, setImageURL] = useState("Loading Image")
@@ -10,7 +15,7 @@ export function About() {
   React.useEffect(() => {
     setImageURL(`download.jpeg`);
     setQuote('A quote has loaded!!');
-    setAuthor('Psychologist');
+    setAuthor('An excited programmer (this took heaps of time)');
   }, []);
 
   return (
