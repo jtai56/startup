@@ -1,6 +1,13 @@
 import React from 'react';
 
-export function Leaderboard() {
+export function Leaderboard({logs}) {
+    const highestLog = logs.reduce((max, log) => {
+      return log.hours > (max?.hours || 0) ? log : max;
+    }, null);  // if the visitor is greater than the max, make the vistor the new max
+      //max?.hours || 0, This just says if max hours is on its first go around make it 0.
+
+
+
   return (
     <main>
         <table className="table table-light">
@@ -12,6 +19,17 @@ export function Leaderboard() {
           </tr>
         </thead>
         <tbody>
+          {highestLog ? (
+            <tr>
+              <td>You</td>
+              <td>{highestLog.name}</td>
+              <td>You spent {highestLog.hours} hours on this skill. Amazing!</td>
+            </tr>
+          ) : (
+            <tr>
+              <td colSpan="3">No logs yet</td>
+            </tr>
+          )}
           <tr>
             <td>James</td>
             <td>Juggling one-handed</td>
