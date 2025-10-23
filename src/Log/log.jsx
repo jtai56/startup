@@ -4,7 +4,8 @@ import { useState, useEffect} from 'react';
 export function Log() {
     const [logs, setLogs] = React.useState([])
     const [logName, setLogName] = React.useState("")
-    
+    const [activities,setActivities] =React.useState([])
+
     const createLog = () => {
         //creates new log
         if (logName.trim()=== ""){return}
@@ -20,11 +21,26 @@ export function Log() {
     };
     
     const updateHours = (id, changeInt) => {
-        setLogs(logs.map(log =>      // This code is buns but basically, if the log.id in the array == selected id, change log.hours by the changeInt (-1 or +1), if not keep the log and to map anything.
+        setLogs(logs.map(log =>      // This code is buns to understand but basically, if the log.id in the array == selected id, 
+                                    // change log.hours by the changeInt (-1 or +1), if not keep the log and to map anything.
             log.id === id ? {...log, hours: Math.max(0,log.hours + changeInt)} : log
         ));
     };
+    
+    useEffect(() => {
+    const interval = setInterval(() => {
+      const userName = `User-${Math.floor(Math.random() * 100)}`;
+      const time = Math.floor(Math.random() * 5) + 1;
+      const newActivity = `${userName} just spent ${time} hours on a skill!`;
 
+      
+      setActivities(prev => [newActivity, ...prev].slice(0, 5)); // Keep last 5 activities
+    }, 5000);
+
+    return () => clearInterval(interval);    // Cleanup when component unmounts
+    }, []);  //Doesn't need dependecies, just runs once on mount and then lets the interval keep going i guess
+    
+    
     return (
     <main className="logpage">
         <h1 id="logheader">Your Log:</h1>
@@ -48,9 +64,11 @@ export function Log() {
         <div className="players">
             <h2>Other Activity:</h2>
             <ul className="notification">
-                <li className="player-name">Tim started a new skill (pottery)</li>
-                <li className="player-name">Ada started a new skill (hatchet throwing)</li>
-                <li className="player-name">Tim just spent 2 hours on drywalling</li>
+                {activities.map((a, i) => (
+                <li key={i} className="player-name">
+                    {a}
+                </li>
+                ))}
             </ul>
         </div>
     </main>
