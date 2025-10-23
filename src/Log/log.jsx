@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, Date, Math} from 'react';
+import { useState, useEffect} from 'react';
 
 export function Log() {
     const [logs, setLogs] = React.useState([])
@@ -7,12 +7,12 @@ export function Log() {
     
     const createLog = () => {
         //creates new log
-        if (logName.strip()=== ""){return}
+        if (logName.trim()=== ""){return}
         const newLog = {
             id:Date.now(),
             name: logName,
             hours: 0
-        }
+        };
         //puts new log in the maps withe the other log peeps
         setLogs([...logs,newLog])
         setLogName("")            //clears the log names so that people can't repeatedly 
@@ -21,66 +21,27 @@ export function Log() {
     
     const updateHours = (id, changeInt) => {
         setLogs(logs.map(log =>      // This code is buns but basically, if the log.id in the array == selected id, change log.hours by the changeInt (-1 or +1), if not keep the log and to map anything.
-            log.id === id ? {...log, hours: Math.maxlog(0,log.hours + changeInt)} : log
-        ))  
-    }
+            log.id === id ? {...log, hours: Math.max(0,log.hours + changeInt)} : log
+        ));
+    };
 
     return (
     <main className="logpage">
         <h1 id="logheader">Your Log:</h1>
         <div id="log">
-            <div className="skillcard"> 
-                <div className="cardtitle">Drawing</div>
-                <h2 className="hours">10000</h2>
+            {logs.map(log => (
+            <div key = {log.id} className="skillcard"> 
+                <div className="cardtitle">{log.name}</div>
+                <h2 className="hours">{log.hours}</h2>
                 <div className="addsubtract">
-                    <button>-</button>
-                    <button>+</button>
+                    <button onClick={() => updateHours(log.id, -1)}>-</button>
+                    <button onClick={() => updateHours(log.id, 1)} >+</button>
                 </div>
             </div>
-            <div className="skillcard"> 
-                <div className="cardtitle">Drawing</div>
-                <h2 className="hours">10000</h2>
-                <div className="addsubtract">
-                    <button>-</button>
-                    <button>+</button>
-                </div>
-            </div>
-            <div className="skillcard"> 
-                <div className="cardtitle">Drawing</div>
-                <h2 className="hours">10000</h2>
-                <div className="addsubtract">
-                    <button>-</button>
-                    <button>+</button>
-                </div>
-            </div>
-            <div className="skillcard"> 
-                <div className="cardtitle">Drawing</div>
-                <h2 className="hours">10000</h2>
-                <div className="addsubtract">
-                    <button>-</button>
-                    <button>+</button>
-                </div>
-            </div>
-            <div className="skillcard"> 
-                <div className="cardtitle">Drawing</div>
-                <h2 className="hours">10000</h2>
-                <div className="addsubtract">
-                    <button>-</button>
-                    <button>+</button>
-                </div>
-            </div>
-            <div className="skillcard"> 
-                <div className="cardtitle">Drawing</div>
-                <h2 className="hours">10000</h2>
-                <div className="addsubtract">
-                    <button>-</button>
-                    <button>+</button>
-                </div>
-            </div>
-            
+            ))}
         </div>
         <div id = "logMenu">
-            <input type="text" id="" name="Goal Name" placeholder="Whats next?"/>
+            <input type="text" value = {logName} id="" name="Goal Name" placeholder="Whats next?" onChange = {e => setLogName(e.target.value)}/>
             <button id= "createLogButton" onClick={createLog}>Create</button>
         </div>
         <br />
