@@ -1,8 +1,7 @@
 import React from 'react';
 import { useState, useEffect} from 'react';
 
-export function Log() {
-    const [logs, setLogs] = React.useState([])
+export function Log({logs, setLogs}) {
     const [logName, setLogName] = React.useState("")
     const [activities,setActivities] =React.useState([])
 
