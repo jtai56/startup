@@ -844,8 +844,136 @@ fetch('https://jsonplaceholder.typicode.com/posts', {
   .then((jsonResponse) => {
 
     console.log(jsonResponse);
-  });`` 
+  });``
 ```
+## JavaScript Modules
+Modules enable the sharing of code. Common JS:
+To import common js modules/ or npm packages, use this syntax:
+```
+const express = require('express');
+const DB = require('./database.js')
+```
+To export something from your own code, do this:
+```
+function alertDisplay(msg) {
+  alert(msg);
+}
+
+module.exports = {
+  alertDisplay,
+};
+```
+ES Modules
+Importing:
+```
+import express from 'express';
+
+express().listen(3000);
+```
+Exporting
+```
+export function alertDisplay(msg) {
+  console.log(msg);
+}
+```
+The difference between ES and CommonJS is common JS is older and ES is newer. The major difference is, import is an asynchronous means of including modules, where as require is synchronous. CommonJS does not support async in the root of a module, import itself does exist in CommonJS, just not in the root level of a module (file). If you create an async function, you can all and await import from inside of it.
+
+ESM will handle the root level async imports for you, and provide a whole realm of future features going forward.
+
+ESM can consume and use CommonJS modules, but CommonJS cannot consume ESM modules, it's a one way street. A module either has to explicitly output both an ESM and a CommonJS output, and be configured in such a way that it exposes both in a resolvable fashion. In some cases people use a simple wrapper to achieve this, but it does not come without it's pains.
+
+This is mostly only an issue if you're building something with the intention of publishing it to npm where it will be consumed by a wider audience. Because whether or not you support both impacts who can consume your API.
+
+ES Modules in HTML:
+To be able to use it in browser HTML, you can declare the script type as a module:
+```
+<script type="module">
+  import { alertDisplay } from './alert.js';
+  alertDisplay('module loaded');
+</script>
+```
+To allow the use of modules outside the scope of the scripts, you must leak the module into the global scope by attaching event handlers or adding a function to the global window object.
+```
+<html>
+  <body>
+    <script type="module">
+      import { alertDisplay } from './alert.js';
+      window.btnClick = alertDisplay;
+
+      document.body.addEventListener('keypress', function (event) {
+        alertDisplay('Key pressed');
+      });
+    </script>
+    <button onclick="btnClick('button clicked')">Press me</button>
+  </body>
+</html>
+
+#or
+import { alertDisplay } from './alertModule.js';
+
+// Expose it globally
+window.alertDisplay = alertDisplay;
+
+// Optionally, attach it to an event
+window.addEventListener('keypress', event => {
+  if (event.key === 'a') {
+    alertDisplay('You pressed "a"');
+  }
+});
+```
+##Same Origin Policy (SOP) and Cross Origin Resource Sharing (CORS):
+SOP means that javascript only allows make requests to a domain if its the same domain the user is currently viewing. A request from byu.iinstructure.com for service endpoints that are made to byu.instructure.com would fail because the domains do not match. Because a user may have cookies (with authentication or session credentials) and they are passed to all visited websites, without SOP, websites could yoink those cookies and use them to make requests somewhere else. 
+
+CORS allows the client (e.g. browser) to specify the origin of a request and then let the server respond with what origins are allowed. The server may say that all origins are allowed, for example if they are a general purpose image provider, or only a specific origin is allowed, for example if they are a bank's authentication service. If the server doesn't specify what origin is allowed then the browser assumes that it must be the same origin. Kinda like a robots.txt but for make requests and they are
+
+
+## Mongo Db
+Mongo DB is a nosql database. Below is an example query
+```
+// Database 
+[
+  {
+    _id: '62300f5316f7f58839c811de',
+    name: 'Lovely Loft',
+    summary: 'A charming loft in Paris',
+    beds: 1,
+    last_review: {
+      $date: '2022-03-15T04:06:17.766Z',
+    },
+    price: 3000,
+  },
+  {
+    _id: '623010b97f1fed0a2df311f8',
+    name: 'Infinite Views',
+    summary: 'Modern home with infinite views from the infinity pool',
+    property_type: 'House',
+    beds: 5,
+    price: 250,
+  },
+];
+
+
+// find all houses
+db.house.find();
+
+// find houses with two or more bedrooms
+db.house.find({ beds: { $gte: 2 } });
+
+// find houses that are available with less than three beds
+db.house.find({ status: 'available', beds: { $lt: 3 } });
+
+// find houses with either less than three beds or less than $1000 a night
+db.house.find({ $or: [(beds: { $lt: 3 }), (price: { $lt: 1000 })] });
+
+// find houses with the text 'modern' or 'beach' in the summary
+db.house.find({ summary: /(modern|beach)/i });
+```
+
+
+
+
+
+
 ## MIDTERM QUESTIONS
 
 ### In the following code, what does the link element do?
