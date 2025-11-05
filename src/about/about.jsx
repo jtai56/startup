@@ -12,20 +12,14 @@ export function About() {
   const [quote, setQuote] = useState("Loading Quote...")
   const [author, setAuthor] = useState("Loading Author...")
 
-  React.useEffect(() => {
-    const quoteApiURL = "https://zenquotes.io/api/random/";
-    async function getapi(url)
-    {
-        const response = await fetch(url);
-        var data = await response.json();
-        console.log(data)
-        return data
-    }
-    let data = getapi(quoteApiURL);
-    setImageURL(`download.jpeg`);
-    setQuote(data.q);
-    setAuthor(data.p);
-  }, []);
+  useEffect(() => {
+    fetch('/api/quote')
+    .then((res) => res.json())
+    .then((data) => {
+    setQuote(data[0].q);
+    setAuthor(data[0].a);
+  });
+}, []);
 
   return (
     <main>
