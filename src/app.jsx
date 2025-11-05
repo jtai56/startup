@@ -11,13 +11,14 @@ import { About } from './about/about';
 const AuthState = {
   Authenticated: 'Authenticated',
   Unauthenticated: 'Unauthenticated'
+  Unknown: 'unknown'
 };
 
 export default function App() {
     const [logs, setLogs] = React.useState([]);
-    const [user, setUser] = React.useState(localStorage.getItem('user') || null);
-    const [userName, setUserName] = React.useState(user || '');
-    const [authState, setAuthState] = React.useState(user ? AuthState.Authenticated : AuthState.Unauthenticated);
+    const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+    const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
+    const [authState, setAuthState] = React.useState(currentAuthState);
 
     return (
         <BrowserRouter>

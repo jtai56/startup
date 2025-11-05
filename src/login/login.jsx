@@ -1,13 +1,17 @@
 import React from 'react';
 
+import { Unauthenticated } from './unauthenticated';
+import { Authenticated } from './authenticated';
+import { AuthState } from './authState';
+
 export function Login({ userName, authState, onAuthChange }) {
   const [loginName, setLoginName] = React.useState('');
 
   function loginUser(e) {
     e.preventDefault(); // prevents page reload
     if (!loginName.trim()) return;
-    localStorage.setItem('user', loginName);
-    onAuthChange(loginName, 'Authenticated'); 
+    localStorage.setItem('userName', userName);
+    onAuthChange(userName, 'Authenticated'); 
   }
 
   function textChange(e) {
@@ -17,8 +21,8 @@ export function Login({ userName, authState, onAuthChange }) {
   return (
     <main className='main'>
       <div className="container">
-        <h1>Let's repo your progress.</h1>
-        <h2>Github but for pushing your life forward.</h2>
+        {authState !== AuthState.Unknown && <h1>Let's repo your progress.</h1>}
+        {authState !== AuthState.Unknown && <h2>Github but for pushing your life forward.</h2>}
         <form onSubmit={loginUser}>
           <div className="login">
             <div className="inputs">
@@ -27,7 +31,7 @@ export function Login({ userName, authState, onAuthChange }) {
                 <input
                   type="text"
                   placeholder="your@email.com"
-                  value={loginName}
+                  value={userName}
                   onChange={textChange}
                 />
               </div>
