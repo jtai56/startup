@@ -13,9 +13,18 @@ export function About() {
   const [author, setAuthor] = useState("Loading Author...")
 
   React.useEffect(() => {
+    const quoteApiURL = "https://zenquotes.io/api/random/";
+    async function getapi(url)
+    {
+        const response = await fetch(url);
+        var data = await response.json();
+        console.log(data)
+        return data
+    }
+    let data = getapi(quoteApiURL);
     setImageURL(`download.jpeg`);
-    setQuote('A quote has loaded!!');
-    setAuthor('An excited programmer (this took heaps of time)');
+    setQuote(data.q);
+    setAuthor(data.p);
   }, []);
 
   return (
