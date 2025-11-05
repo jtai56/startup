@@ -18,6 +18,7 @@ export function About() {
     .then((data) => {
     setQuote(data[0].q);
     setAuthor(data[0].a);
+    setImageURL("download.jpeg")
   });
 }, []);
 
