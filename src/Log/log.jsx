@@ -5,6 +5,15 @@ export function Log({logs, setLogs}) {
     const [logName, setLogName] = React.useState("")
     const [activities,setActivities] =React.useState([])
 
+    async function sendLogToServer(log) {
+        const response = await fetch('/api/log', {
+            method: 'POST',
+            body: JSON.stringify(log),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        });
+    }
     const createLog = () => {
         //creates new log
         if (logName.trim()=== ""){return}
@@ -13,12 +22,14 @@ export function Log({logs, setLogs}) {
             name: logName,
             hours: 0
         };
+
         //puts new log in the maps withe the other log peeps
         setLogs([...logs,newLog])
         setLogName("")            //clears the log names so that people can't repeatedly 
 
     };
     
+
     const updateHours = (id, changeInt) => {
         setLogs(logs.map(log =>      // This code is buns to understand but basically, if the log.id in the array == selected id, 
                                     // change log.hours by the changeInt (-1 or +1), if not keep the log and to map anything.

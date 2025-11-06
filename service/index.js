@@ -11,7 +11,7 @@ const authCookieName = 'token';
 
 let users = [];
 let scores = [];
-
+let logs = [];
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
 
 
@@ -123,6 +123,14 @@ apiRouter.get('/quote', async (req, res, next) => {
   }
 });
 
+apiRouter.post('/log', async (req, res, next) => {
+  try {
+    logs.push(req.body);
+    res.status(201).send({ msg: 'Log created' });
+  } catch (err) {
+    next(err);
+  }
+});
 // error handler
 app.use(function (err, req, res, next) {
   res.status(500).send({ type: err.name, message: err.message });
