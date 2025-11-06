@@ -33,29 +33,16 @@ export function Unauthenticated(props) {
         }
     }
 
+    function textChange(e) {
+        setUserName(e.target.value);
+    }
     return (
-        <form onSubmit={loginUser}>
-            <div className="login">
-                <div className="inputs">
-                    <div>
-                        <span>👤 </span>
-                        <input
-                        type="text"
-                        placeholder="your@email.com"
-                        value={loginName}
-                        onChange={textChange}
-                        />
-                    </div>
-                    <div>
-                        <span>🔒</span>
-                        <input type="password" placeholder="password" />
-                    </div>
-                </div>
-            </div>
+        <div>
+            <div>{props.userName}</div>
             <div className="loginButtons">
-                <button type="submit">Login</button>
-                <button type="button">Create</button>
+                <button onClick={() => Navigate('/log')} disabled={!userName || !password}>Start Log</button>
+                <button onClick={() => logout()} >Logoout</button>
             </div>
-        </form>
+        </div>
     );
 };

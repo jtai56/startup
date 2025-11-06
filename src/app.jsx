@@ -6,13 +6,9 @@ import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import { Login } from './login/login';
 import { Log } from './log/log';
 import { Leaderboard } from './leaderboard/leaderboard';
+import { AuthState } from './login/authstate';
 import { About } from './about/about';
 
-const AuthState = {
-  Authenticated: 'Authenticated',
-  Unauthenticated: 'Unauthenticated'
-  Unknown: 'unknown'
-};
 
 export default function App() {
     const [logs, setLogs] = React.useState([]);
