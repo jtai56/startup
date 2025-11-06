@@ -12,7 +12,11 @@ export function Log({logs, setLogs}) {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
+            credentials: 'include', // Include cookies for authentication
         });
+        if (!response.ok) {
+            console.error('Failed to save log:', await response.text());
+        }
     }
     const createLog = () => {
         //creates new log
@@ -22,7 +26,7 @@ export function Log({logs, setLogs}) {
             name: logName,
             hours: 0
         };
-
+        sendLogToServer(newLog);
         //puts new log in the maps withe the other log peeps
         setLogs([...logs,newLog])
         setLogName("")            //clears the log names so that people can't repeatedly 
@@ -31,10 +35,14 @@ export function Log({logs, setLogs}) {
     
 
     const updateHours = (id, changeInt) => {
-        setLogs(logs.map(log =>      // This code is buns to understand but basically, if the log.id in the array == selected id, 
-                                    // change log.hours by the changeInt (-1 or +1), if not keep the log and to map anything.
-            log.id === id ? {...log, hours: Math.max(0,log.hours + changeInt)} : log
-        ));
+        const updatedLogs = logs.map(log => 
+            log.id === id ? {...log, hours: Math.max(0, log.hours + changeInt)} : log 
+        );
+        const updatedLog = updatedLogs.find(log => log.id === id);
+        setLogs(updatedLogs);
+        if (updatedLog) {
+            sendLogToServer(updatedLog);
+        }
     };
     
     useEffect(() => {
@@ -61,7 +69,7 @@ export function Log({logs, setLogs}) {
                 <h2 className="hours">{log.hours}</h2>
                 <div className="addsubtract">
                     <button onClick={() => updateHours(log.id, -1)}>-</button>
-                    <button onClick={() => updateHours(log.id, 1)} >+</button>
+                    <button onClick={() => updateHours(log.id, 1)}>+</button>
                 </div>
             </div>
             ))}

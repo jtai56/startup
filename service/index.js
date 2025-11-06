@@ -125,12 +125,42 @@ apiRouter.get('/quote', async (req, res, next) => {
 
 apiRouter.post('/log', async (req, res, next) => {
   try {
-    logs.push(req.body);
-    res.status(201).send({ msg: 'Log created' });
+    const logIndex = logs.findIndex(log => log.id === req.body.id);
+    
+    if (logIndex === -1) {
+      // Create new log
+      logs.push(req.body);
+      console.log('Log created:', req.body);
+      res.status(201).send({ msg: 'Log created' });
+    } else {
+      // Update existing log
+      logs[logIndex] = { ...logs[logIndex], ...req.body };
+      console.log('Log updated:', logs[logIndex]);
+      res.status(200).send({ msg: 'Log updated' });
+    }
   } catch (err) {
     next(err);
   }
 });
+
+apiRouter.put('/log/:id', async (req, res, next) => {
+  try {
+    const logId = parseInt(req.params.id);
+    const logIndex = logs.findIndex(log => log.id === logId);
+    
+    if (logIndex === -1) {
+      res.status(404).send({ msg: 'Log not found' });
+      return;
+    }
+    
+    logs[logIndex] = { ...logs[logIndex], ...req.body };
+    console.log('Log updated:', logs[logIndex]);
+    res.status(200).send({ msg: 'Log updated' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // error handler
 app.use(function (err, req, res, next) {
   res.status(500).send({ type: err.name, message: err.message });
