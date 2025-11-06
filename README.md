@@ -110,12 +110,12 @@ I checked the box `[x]` and added a description for things I completed.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
+- [X] **Node.js/Express HTTP service** - I used express to make an /api router and node to run my server.
+- [X] **Static middleware for frontend** - I used static middleware for the front end. 
+- [X] **Calls to third party endpoints** - I make a thrid party api call to zenquotes.
+- [X] **Backend service endpoints** - I made endpoints for logging and authentication.
+- [X] **Frontend calls service endpoints** - I call service endpoints from the front end, for example when change the number of hours on a log.
+- [X] **Supports registration, login, logout, and restricted endpoint** - I did complete this part of the deliverable.
 
 
 ## 🚀 DB deliverable

@@ -123,14 +123,30 @@ apiRouter.get('/quote', async (req, res, next) => {
   }
 });
 
+// Modify the POST /log endpoint to associate logs with users
 apiRouter.post('/log', async (req, res, next) => {
   try {
-    const logIndex = logs.findIndex(log => log.id === req.body.id);
+    // Get the authenticated user
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (!user) {
+      res.status(401).send({ msg: 'Unauthorized' });
+      return;
+    }
+
+    // Associate the log with the user's email
+    const logWithUser = {
+      ...req.body,
+      userEmail: user.email
+    };
+
+    const logIndex = logs.findIndex(log => 
+      log.id === req.body.id && log.userEmail === user.email
+    );
     
     if (logIndex === -1) {
       // Create new log
-      logs.push(req.body);
-      console.log('Log created:', req.body);
+      logs.push(logWithUser);
+      console.log('Log created:', logWithUser);
       res.status(201).send({ msg: 'Log created' });
     } else {
       // Update existing log
@@ -138,6 +154,42 @@ apiRouter.post('/log', async (req, res, next) => {
       console.log('Log updated:', logs[logIndex]);
       res.status(200).send({ msg: 'Log updated' });
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Retrieve user's logs
+apiRouter.get('/log', async (req, res, next) => {
+  try {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (!user) {
+      res.status(401).send({ msg: 'Unauthorized' });
+      return;
+    }
+
+    const userLogs = logs.filter(log => log.userEmail === user.email);
+    res.json(userLogs);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get user's highest hour log (for leaderboard hehe)
+apiRouter.get('/log/highest', async (req, res, next) => {
+  try {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (!user) {
+      res.status(401).send({ msg: 'Unauthorized' });
+      return;
+    }
+
+    const userLogs = logs.filter(log => log.userEmail === user.email);
+    const highestLog = userLogs.reduce((max, log) => {
+      return log.hours > (max?.hours || 0) ? log : max;
+    }, null);
+
+    res.json(highestLog || { msg: 'No logs yet' });
   } catch (err) {
     next(err);
   }

@@ -46,6 +46,22 @@ export function Log({logs, setLogs}) {
     };
     
     useEffect(() => {
+    // Load user's logs from server when component mounts
+    async function loadLogs() {
+        try {
+            const response = await fetch('/api/log', {
+                credentials: 'include',
+            });
+            if (response.ok) {
+                const userLogs = await response.json();
+                setLogs(userLogs);
+            }
+        } catch (err) {
+            console.error('Error loading logs:', err);
+        }
+    }
+    loadLogs();
+
     const interval = setInterval(() => {
       const userName = `User-${Math.floor(Math.random() * 100)}`;
       const time = Math.floor(Math.random() * 5) + 1;
