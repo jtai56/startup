@@ -23,12 +23,12 @@ export function Authenticated(props) {
   return (
     <div>
       <div className='playerName'>{props.userName}</div>
-      <Button onClick={() => navigate('/play')}>
-        Play
-      </Button>
-      <Button onClick={() => logout()}>
+      <button onClick={() => navigate('/log')}>
+        Start Logging
+      </button>
+      <button onClick={() => logout()}>
         Log Out
-      </Button>
+      </button>
     </div>
   );
 }
