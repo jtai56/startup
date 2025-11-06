@@ -6,6 +6,7 @@ import { AuthState } from './authstate';
 
 export function Login({ userName, authState, onAuthChange }) {
   const [loginName, setLoginName] = React.useState('');
+  console.log('Login component render - authState:', authState, 'userName:', userName);
   return (
     <main className='main'>
       <div className="container">
@@ -18,6 +19,7 @@ export function Login({ userName, authState, onAuthChange }) {
           <Unauthenticated
             userName={userName}
             onLogin={(loginUserName) => {
+              console.log('onLogin called with:', loginUserName);
               onAuthChange(loginUserName, AuthState.Authenticated);
             }}
           />

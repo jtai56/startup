@@ -43,6 +43,7 @@ export default function App() {
                     userName={userName}
                     authState={authState}
                     onAuthChange={(userName, authState) => {
+                    console.log('onAuthChange called with:', { userName, authState });
                     setAuthState(authState);
                     setUserName(userName);
                     }}
