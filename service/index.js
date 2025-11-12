@@ -2,7 +2,14 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
+const { MongoClient } = require('mongodb');
+const config = require('./dbConfig.json');
 
+const url = `mongodb+serv://${config.userName}:$(config.password}@${config.hostname}`;
+
+//connect to dataabase cluster 
+const cline = new MongoClient(url) ;
+const db= clientInformation.db
 const app = express();
 
 var apiRouter = express.Router()
