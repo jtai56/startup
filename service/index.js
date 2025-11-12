@@ -5,9 +5,9 @@ const uuid = require('uuid');
 const { MongoClient } = require('mongodb');
 const config = require('./dbConfig.json');
 
-const url = `mongodb+serv://${config.userName}:$(config.password}@${config.hostname}`;
+const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 
-//connect to dataabase cluster 
+//connect to database cluster 
 const cline = new MongoClient(url) ;
 const db= clientInformation.db
 const app = express();
@@ -167,7 +167,7 @@ apiRouter.post('/log', async (req, res, next) => {
 });
 
 // Retrieve user's logs
-apiRouter.get('/log', async (req, res, next) => {
+apiRouter.get('/log', verifyAuth, async (req, res, next) => {
   try {
     const user = await findUser('token', req.cookies[authCookieName]);
     if (!user) {
@@ -218,6 +218,10 @@ apiRouter.put('/log/:id', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+app.use((_req, res) => {
+  res.sendFile('index.html', { root: 'public' });
 });
 
 // error handler
