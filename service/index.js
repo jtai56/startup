@@ -2,23 +2,13 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
-const { MongoClient } = require('mongodb');
-const config = require('./dbConfig.json');
+const DB = require('./database.js');
 
-const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
-
-//connect to database cluster 
-const cline = new MongoClient(url) ;
-const db= clientInformation.db
 const app = express();
 
 var apiRouter = express.Router()
 
 const authCookieName = 'token';
-
-let users = [];
-let scores = [];
-let logs = [];
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
 
 
@@ -34,10 +24,9 @@ app.use(express.static('public'));
 // Router for service endpoints
 app.use(`/api`, apiRouter);
 
-// Define helper functions BEFORE they're used
 async function findUser(field, value) {
   if (!value) return null;
-  return users.find((u) => u[field] === value);
+  return DB.getUser(value);
 }
 
 async function createUser(email, password) {
@@ -47,7 +36,7 @@ async function createUser(email, password) {
     password: passwordHash,
     token: uuid.v4(),
   };
-  users.push(user);
+  DB.addUser(user);
   return user;
 }
 
@@ -146,13 +135,9 @@ apiRouter.post('/log', async (req, res, next) => {
       userEmail: user.email
     };
 
-    const logIndex = logs.findIndex(log => 
-      log.id === req.body.id && log.userEmail === user.email
-    );
-    
-    if (logIndex === -1) {
+    if 
       // Create new log
-      logs.push(logWithUser);
+      DB.addLog(logWithUser);
       console.log('Log created:', logWithUser);
       res.status(201).send({ msg: 'Log created' });
     } else {
@@ -175,7 +160,7 @@ apiRouter.get('/log', verifyAuth, async (req, res, next) => {
       return;
     }
 
-    const userLogs = logs.filter(log => log.userEmail === user.email);
+    const userLogs = await DB.getLogs(user.email);
     res.json(userLogs);
   } catch (err) {
     next(err);

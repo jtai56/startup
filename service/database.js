@@ -34,17 +34,33 @@ async function updateUser(user) {
   await userCollection.updateOne({ email: user.email }, { $set: user });
 }
 
-async function addLog(score) {
-  return scoreCollection.insertOne(log);
+// log takes the form of "id":____, "name":___, "hours":___
+async function addLog(log) {
+  return logCollection.insertOne(log);
+}
+
+async function getLogs(userEmail) {
+  const query = { userEmail: userEmail};
+  const cursor = logCollection.find(query);
+  const logs = await cursor.toArray();
+  return logs;
+}
+async function getLogByName(logname)
+
+async function updateLog(log){
+  return await logCollection.updateOne(
+    {id: log.id},
+    {$set: {name: log.name, hours: log.hours}}
+  )
 }
 
 function getHighScores() {
-  const query = { score: { $gt: 0, $lt: 900 } };
+  const query = { score: { $gt: 0, $lt: 10000 } };
   const options = {
     sort: { score: -1 },
     limit: 10,
   };
-  const cursor = scoreCollection.find(query, options);
+  const cursor = logCollection.find(query, options);
   return cursor.toArray();
 }
 
@@ -53,6 +69,8 @@ module.exports = {
   getUserByToken,
   addUser,
   updateUser,
-  addScore,
+  addLog,
   getHighScores,
+  getLogs,
+  updateLog
 };
