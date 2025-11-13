@@ -36,7 +36,7 @@ async function createUser(email, password) {
     password: passwordHash,
     token: uuid.v4(),
   };
-  DB.addUser(user);
+  await DB.addUser(user);
   return user;
 }
 
@@ -134,8 +134,8 @@ apiRouter.post('/log', async (req, res, next) => {
       ...req.body,
       userEmail: user.email
     };
-      // Create new log
-    DB.addLog(logWithUser);
+    // Create new log
+    await DB.addLog(logWithUser);
     console.log('Log created:', logWithUser);
     res.status(201).send({ msg: 'Log created' });
   } catch (err) {
@@ -175,6 +175,18 @@ apiRouter.get('/log/highest', async (req, res, next) => {
 
     res.json(highestLog || { msg: 'No logs yet' });
   } catch (err) {
+    next(err);
+  }
+});
+
+// Get leaderboard - top 10 users by their highest hour log
+apiRouter.get('/leaderboard', async (req, res, next) => {
+  try {
+    const leaderboard = await DB.getLeaderboard();
+    console.log('Leaderboard data:', leaderboard);
+    res.json(leaderboard);
+  } catch (err) {
+    console.error('Error getting leaderboard:', err);
     next(err);
   }
 });

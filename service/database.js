@@ -7,7 +7,7 @@ const db = client.db('simon');
 const userCollection = db.collection('user');
 const logCollection = db.collection('logs');
 
-// This will asynchronously test the connection and exit the process if it fails
+// This will asynchronously test the connection and exit the process if it fails, for testing hehe
 (async function testConnection() {
   try {
     await db.command({ ping: 1 });
@@ -54,10 +54,28 @@ async function updateLog(log){
 }
 
 async function getLeaderboard() {
-  // Use aggregation to get each user's highest hour log
+  //  Aggregation collects/summarizes all of the data, 
+  //  eg,    const data = [
+  //     { category: "fruit", item: "apple" },
+  //     { category: "vegetable", item: "carrot" },
+  //     { category: "fruit", item: "banana" },
+  //   ];
+
+  //   const counts = {};
+  //   for (const entry of data) {
+  //     counts[entry.category] = (counts[entry.category] || 0) + 1;
+  //   }
+
+  //   console.log(counts); // { fruit: 2, vegetable: 1 }
+  
+  // First, let's check if there are any logs at all
+  const allLogs = await logCollection.find({}).toArray();
+  console.log('Total logs in database:', allLogs.length);
+  console.log('Sample logs:', allLogs.slice(0, 3));
+  
   const result = await logCollection.aggregate([
     {
-      // Step 1: Sort all logs by hours (highest first)
+      // -1 sorts by descending
       $sort: { hours: -1 }
     },
     {
@@ -69,15 +87,15 @@ async function getLeaderboard() {
       }
     },
     {
-      // Step 3: Sort by maxHours descending
+      //  Sort by maxHours descending
       $sort: { maxHours: -1 }
     },
     {
-      // Step 4: Limit to top 10
+      // Limites to top 10 results
       $limit: 10
     },
     {
-      // Step 5: Reshape the data for easier frontend use
+      // Reshapes the data for easier frontend use
       $project: {
         _id: 0,
         userEmail: '$_id',
@@ -87,6 +105,7 @@ async function getLeaderboard() {
     }
   ]).toArray();
   
+  console.log('Aggregation result:', result);
   return result;
 }
 

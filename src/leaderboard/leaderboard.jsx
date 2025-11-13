@@ -1,71 +1,59 @@
 import React, { useState, useEffect } from 'react';
 
 export function Leaderboard({logs}) {
-    const [highestLog, setHighestLog] = useState(null);
+    const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function loadHighestLog() {
+        async function loadLeaderboard() {
             try {
-                const response = await fetch('/api/log/highest', {
-                    credentials: 'include', // sends the cookies with the req 
+                const response = await fetch('/api/leaderboard', {
+                    credentials: 'include',
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.msg !== 'No logs yet') {
-                        setHighestLog(data);
-                    }
+                    setLeaderboard(data);
                 }
             } catch (err) {
-                console.error('Error loading highest log:', err);
+                console.error('Error loading leaderboard:', err);
             } finally {
                 setLoading(false);
             }
         }
-        loadHighestLog();
+        loadLeaderboard();
     }, []);
 
     return (
         <main>
+            <h1>Leaderboard - Top 10</h1>
             <table className="table table-light">
                 <thead>
                     <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col">Rank</th>
+                        <th scope="col">User</th>
                         <th scope="col">Skill</th>
-                        <th scope="col">Description</th>
+                        <th scope="col">Hours</th>
                     </tr>
                 </thead>
                 <tbody>
                     {loading ? (
                         <tr>
-                            <td colSpan="3">Loading...</td>
+                            <td colSpan="4">Loading...</td>
                         </tr>
-                    ) : highestLog ? (
-                        <tr>
-                            <td>You</td>
-                            <td>{highestLog.name}</td>
-                            <td>You spent {highestLog.hours} hours on this skill. Amazing!</td>
-                        </tr>
+                    ) : leaderboard.length > 0 ? (
+                        leaderboard.map((entry, index) => (
+                            <tr key={entry.userEmail}>
+                                <td>{index + 1}</td>
+                                <td>{entry.userEmail}</td>
+                                <td>{entry.name}</td>
+                                <td>{entry.hours} hours</td>
+                            </tr>
+                        ))
                     ) : (
                         <tr>
-                            <td colSpan="3">No logs yet</td>
+                            <td colSpan="4">No logs yet. Be the first!</td>
                         </tr>
                     )}
-                    <tr>
-                        <td>James</td>
-                        <td>Juggling one-handed</td>
-                        <td>James spent 20,000 hours on this skill. He is at the top of his game!</td>
-                    </tr>
-                    <tr>
-                        <td>孫悟空</td>
-                        <td>Training</td>
-                        <td>孫悟空 has spent 10,042 hours on training. He is next level!</td>
-                    </tr>
-                    <tr>
-                        <td>성진우</td>
-                        <td>Running</td>
-                        <td>성진우 has spent 10 hours running since April 21, 2023. Cheer him on!</td>
-                    </tr>
                 </tbody>
             </table>
         </main>
