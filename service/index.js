@@ -134,18 +134,10 @@ apiRouter.post('/log', async (req, res, next) => {
       ...req.body,
       userEmail: user.email
     };
-
-    if 
       // Create new log
-      DB.addLog(logWithUser);
-      console.log('Log created:', logWithUser);
-      res.status(201).send({ msg: 'Log created' });
-    } else {
-      // Update existing log
-      logs[logIndex] = { ...logs[logIndex], ...req.body };
-      console.log('Log updated:', logs[logIndex]);
-      res.status(200).send({ msg: 'Log updated' });
-    }
+    DB.addLog(logWithUser);
+    console.log('Log created:', logWithUser);
+    res.status(201).send({ msg: 'Log created' });
   } catch (err) {
     next(err);
   }
@@ -176,7 +168,7 @@ apiRouter.get('/log/highest', async (req, res, next) => {
       return;
     }
 
-    const userLogs = logs.filter(log => log.userEmail === user.email);
+    const userLogs = await DB.getLogs(user.email)
     const highestLog = userLogs.reduce((max, log) => {
       return log.hours > (max?.hours || 0) ? log : max;
     }, null);
@@ -189,16 +181,31 @@ apiRouter.get('/log/highest', async (req, res, next) => {
 
 apiRouter.put('/log/:id', async (req, res, next) => {
   try {
+    // Get the authenticated use
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (!user) {
+      res.status(401).send({ msg: 'Unauthorized' });
+      return;
+    }
+
     const logId = parseInt(req.params.id);
-    const logIndex = logs.findIndex(log => log.id === logId);
     
-    if (logIndex === -1) {
+    // Create the updated log object with user email for security
+    const updatedLog = {
+      id: logId,
+      userEmail: user.email,
+      ...req.body
+    };
+    
+    // Update in database
+    const result = await DB.updateLog(updatedLog);
+    
+    if (result.matchedCount === 0) {
       res.status(404).send({ msg: 'Log not found' });
       return;
     }
     
-    logs[logIndex] = { ...logs[logIndex], ...req.body };
-    console.log('Log updated:', logs[logIndex]);
+    console.log('Log updated:', updatedLog);
     res.status(200).send({ msg: 'Log updated' });
   } catch (err) {
     next(err);

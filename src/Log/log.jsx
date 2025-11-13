@@ -18,6 +18,20 @@ export function Log({logs, setLogs}) {
             console.error('Failed to save log:', await response.text());
         }
     }
+
+    async function updateLogOnServer(log) {
+        const response = await fetch(`/api/log/${log.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(log),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            credentials: 'include', // Include cookies for authentication
+        });
+        if (!response.ok) {
+            console.error('Failed to update log:', await response.text());
+        }
+    }
     const createLog = () => {
         //creates new log
         if (logName.trim()=== ""){return}
@@ -41,7 +55,7 @@ export function Log({logs, setLogs}) {
         const updatedLog = updatedLogs.find(log => log.id === id);
         setLogs(updatedLogs);
         if (updatedLog) {
-            sendLogToServer(updatedLog);
+            updateLogOnServer(updatedLog);
         }
     };
     

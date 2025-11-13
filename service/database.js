@@ -45,23 +45,49 @@ async function getLogs(userEmail) {
   const logs = await cursor.toArray();
   return logs;
 }
-async function getLogByName(logname)
 
 async function updateLog(log){
   return await logCollection.updateOne(
-    {id: log.id},
+    {id: log.id, userEmail: log.userEmail},
     {$set: {name: log.name, hours: log.hours}}
   )
 }
 
-function getHighScores() {
-  const query = { score: { $gt: 0, $lt: 10000 } };
-  const options = {
-    sort: { score: -1 },
-    limit: 10,
-  };
-  const cursor = logCollection.find(query, options);
-  return cursor.toArray();
+async function getLeaderboard() {
+  // Use aggregation to get each user's highest hour log
+  const result = await logCollection.aggregate([
+    {
+      // Step 1: Sort all logs by hours (highest first)
+      $sort: { hours: -1 }
+    },
+    {
+      // Step 2: Group by userEmail and take the first (highest) log for each user
+      $group: {
+        _id: '$userEmail',
+        maxHours: { $first: '$hours' },
+        skillName: { $first: '$name' }
+      }
+    },
+    {
+      // Step 3: Sort by maxHours descending
+      $sort: { maxHours: -1 }
+    },
+    {
+      // Step 4: Limit to top 10
+      $limit: 10
+    },
+    {
+      // Step 5: Reshape the data for easier frontend use
+      $project: {
+        _id: 0,
+        userEmail: '$_id',
+        hours: '$maxHours',
+        name: '$skillName'
+      }
+    }
+  ]).toArray();
+  
+  return result;
 }
 
 module.exports = {
@@ -70,7 +96,7 @@ module.exports = {
   addUser,
   updateUser,
   addLog,
-  getHighScores,
+  getLeaderboard,
   getLogs,
   updateLog
 };
