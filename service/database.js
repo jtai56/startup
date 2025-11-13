@@ -54,32 +54,11 @@ async function updateLog(log){
 }
 
 async function getLeaderboard() {
-  //  Aggregation collects/summarizes all of the data, 
-  //  eg,    const data = [
-  //     { category: "fruit", item: "apple" },
-  //     { category: "vegetable", item: "carrot" },
-  //     { category: "fruit", item: "banana" },
-  //   ];
-
-  //   const counts = {};
-  //   for (const entry of data) {
-  //     counts[entry.category] = (counts[entry.category] || 0) + 1;
-  //   }
-
-  //   console.log(counts); // { fruit: 2, vegetable: 1 }
-  
-  // First, let's check if there are any logs at all
-  const allLogs = await logCollection.find({}).toArray();
-  console.log('Total logs in database:', allLogs.length);
-  console.log('Sample logs:', allLogs.slice(0, 3));
-  
   const result = await logCollection.aggregate([
     {
-      // -1 sorts by descending
       $sort: { hours: -1 }
     },
     {
-      // Step 2: Group by userEmail and take the first (highest) log for each user
       $group: {
         _id: '$userEmail',
         maxHours: { $first: '$hours' },
@@ -87,15 +66,12 @@ async function getLeaderboard() {
       }
     },
     {
-      //  Sort by maxHours descending
       $sort: { maxHours: -1 }
     },
     {
-      // Limites to top 10 results
       $limit: 10
     },
     {
-      // Reshapes the data for easier frontend use
       $project: {
         _id: 0,
         userEmail: '$_id',
@@ -105,7 +81,6 @@ async function getLeaderboard() {
     }
   ]).toArray();
   
-  console.log('Aggregation result:', result);
   return result;
 }
 

@@ -26,7 +26,13 @@ app.use(`/api`, apiRouter);
 
 async function findUser(field, value) {
   if (!value) return null;
-  return DB.getUser(value);
+  
+  if (field === 'token') {
+    return await DB.getUserByToken(value);
+  } else {
+    // Assume field is 'email'
+    return await DB.getUser(value);
+  }
 }
 
 async function createUser(email, password) {
@@ -56,7 +62,6 @@ apiRouter.post('/auth/create', async (req, res, next) => {
       res.status(409).send({ msg: 'Existing user' });
     } else {
       const user = await createUser(req.body.email, req.body.password);
-
       setAuthCookie(res, user.token);
       res.send({ email: user.email });
     }
@@ -72,6 +77,7 @@ apiRouter.post('/auth/login', async (req, res, next) => {
     if (user) {
       if (await bcrypt.compare(req.body.password, user.password)) {
         user.token = uuid.v4();
+        await DB.updateUser(user);
         setAuthCookie(res, user.token);
         res.send({ email: user.email });
         return;
@@ -122,21 +128,18 @@ apiRouter.get('/quote', async (req, res, next) => {
 // Modify the POST /log endpoint to associate logs with users
 apiRouter.post('/log', async (req, res, next) => {
   try {
-    // Get the authenticated user
     const user = await findUser('token', req.cookies[authCookieName]);
     if (!user) {
       res.status(401).send({ msg: 'Unauthorized' });
       return;
     }
 
-    // Associate the log with the user's email
     const logWithUser = {
       ...req.body,
       userEmail: user.email
     };
-    // Create new log
+    
     await DB.addLog(logWithUser);
-    console.log('Log created:', logWithUser);
     res.status(201).send({ msg: 'Log created' });
   } catch (err) {
     next(err);
@@ -183,10 +186,8 @@ apiRouter.get('/log/highest', async (req, res, next) => {
 apiRouter.get('/leaderboard', async (req, res, next) => {
   try {
     const leaderboard = await DB.getLeaderboard();
-    console.log('Leaderboard data:', leaderboard);
     res.json(leaderboard);
   } catch (err) {
-    console.error('Error getting leaderboard:', err);
     next(err);
   }
 });

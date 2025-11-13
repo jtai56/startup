@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState, useEffect} from 'react';
 
-export function Log({logs, setLogs}) {
+export function Log() {
     const [logName, setLogName] = React.useState("")
+    const [logs, setLogs] = React.useState([])
     const [activities,setActivities] =React.useState([])
 
     async function sendLogToServer(log) {

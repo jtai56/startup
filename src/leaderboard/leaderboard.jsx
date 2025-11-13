@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export function Leaderboard({logs}) {
+export function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
 

@@ -11,7 +11,6 @@ import { About } from './about/about';
 
 
 export default function App() {
-    const [logs, setLogs] = React.useState([]);
     const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
     const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
     const [authState, setAuthState] = React.useState(currentAuthState);
@@ -50,8 +49,8 @@ export default function App() {
                 />
                 }
             />
-            <Route path='/log' element={<Log logs={logs} setLogs={setLogs} />} />
-            <Route path='/leaderboard' element={<Leaderboard logs={logs} />} />
+            <Route path='/log' element={<Log />} />
+            <Route path='/leaderboard' element={<Leaderboard />} />
             <Route path='/about' element={<About />} />
             <Route path='*' element={<NotFound />} />
             </Routes>
