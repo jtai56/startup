@@ -2,4 +2,4 @@
 .DS_Store
 node_modules
 service/node_modules
-service/db.config.json
+service/dbConfig.json
