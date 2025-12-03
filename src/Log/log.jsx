@@ -68,56 +68,49 @@ export function Log() {
               
               const message = `${userName} has now spent ${updatedLog.hours} hours on ${updatedLog.name}!`;
               
+              console.log('Broadcasting message:', message);
               LogNotifier.broadcastEvent(userName, LogEvent.End, { msg: message });
+            } else {
+              console.error('Failed to get user data:', response.status);
             }
           } catch (error) {
             console.error('Error broadcasting update:', error);
           }
         }
-      };
-    
-    useEffect(() => {
-    // Load user's logs from server when component mounts
-    async function loadLogs() {
-        try {
-            const response = await fetch('/api/log', {
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const userLogs = await response.json();
-                setLogs(userLogs);
-            }
-        } catch (err) {
-            console.error('Error loading logs:', err);
-        }
-    }
-    loadLogs();
+    };
 
-    
-    LogNotifier.addHandler(handleGameEvent);
-
-    // Cleanup when component unmounts 
-    return () => LogNotifier.removeHandler(handleGameEvent);
-   
-    // This was the placeholder for websocket!
-    // const interval = setInterval(() => {
-    //   const userName = `User-${Math.floor(Math.random() * 100)}`;
-    //   const time = Math.floor(Math.random() * 5) + 1;
-    //   const newActivity = `${userName} just spent ${time} hours on a skill!`;
-
-      
-    //   setActivities(prev => [newActivity, ...prev].slice(0, 5)); // Keep last 5 activities
-    // }, 5000);
-
-    // return () => clearInterval(interval);    // Cleanup when component unmounts
-    // }, []);  //Doesn't need dependecies, just runs once on mount and then lets the interval keep going i guess
-    
     function handleLogEvent(event) {
-        if (event.type === logEvent.End) {
+        console.log('Received WebSocket event:', event);
+        if (event.type === LogEvent.End) {
           const message = event.value.msg;
+          console.log('Adding activity:', message);
           setActivities(prev => [message, ...prev].slice(0, 5));
         }
     }
+
+    useEffect(() => {
+        // Load user's logs from server when component mounts
+        async function loadLogs() {
+            try {
+                const response = await fetch('/api/log', {
+                    credentials: 'include',
+                });
+                if (response.ok) {
+                    const userLogs = await response.json();
+                    setLogs(userLogs);
+                }
+            } catch (err) {
+                console.error('Error loading logs:', err);
+            }
+        }
+        loadLogs();
+
+        // Register WebSocket handler
+        LogNotifier.addHandler(handleLogEvent);
+
+        // Cleanup when component unmounts 
+        return () => LogNotifier.removeHandler(handleLogEvent);
+    }, []); // Empty dependency array = run once on mount
     
     return (
     <main className="logpage">

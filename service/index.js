@@ -1,3 +1,5 @@
+const { peerProxy } = require('./peerProxy.js');
+
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
@@ -112,6 +114,20 @@ const verifyAuth = async (req, res, next) => {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
+
+// Get current user info
+apiRouter.get('/user', verifyAuth, async (req, res, next) => {
+  try {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) {
+      res.json({ email: user.email });
+    } else {
+      res.status(401).send({ msg: 'Unauthorized' });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
 
 apiRouter.get('/quote', async (req, res, next) => {
   try {
@@ -234,6 +250,9 @@ app.use(function (err, req, res, next) {
   res.status(500).send({ type: err.name, message: err.message });
 });
 
-app.listen(port, () => {
+const httpServer = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+// Start WebSocket server
+peerProxy(httpServer);

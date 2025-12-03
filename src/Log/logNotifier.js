@@ -44,14 +44,14 @@ class LogEventNotifier {
   }
 
   removeHandler(handler) {
-    this.handlers.filter((h) => h !== handler);
+    this.handlers = this.handlers.filter((h) => h !== handler);
   }
 
   receiveEvent(event) {
     this.events.push(event);
 
     this.handlers.forEach((handler) => {
-        handler(e);
+        handler(event);
       });
   }
 }
