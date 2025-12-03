@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect} from 'react';
+import { GameNotifier, GameEvent } from './logNotifier.js';
 
 export function Log() {
     const [logName, setLogName] = React.useState("")
@@ -89,6 +90,13 @@ export function Log() {
     return () => clearInterval(interval);    // Cleanup when component unmounts
     }, []);  //Doesn't need dependecies, just runs once on mount and then lets the interval keep going i guess
     
+    function handleGameEvent(event) {
+        // Only process log update events
+        if (event.type === GameEvent.End) {
+          const message = event.value.msg;
+          // Add to activities list (same as before, but now REAL data!)
+          setActivities(prev => [message, ...prev].slice(0, 5));
+        }
     
     return (
     <main className="logpage">
