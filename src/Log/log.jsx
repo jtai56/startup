@@ -106,10 +106,14 @@ export function Log() {
         loadLogs();
 
         // Register WebSocket handler
+        console.log('Registering WebSocket handler');
         LogNotifier.addHandler(handleLogEvent);
 
         // Cleanup when component unmounts 
-        return () => LogNotifier.removeHandler(handleLogEvent);
+        return () => {
+            console.log('Unregistering WebSocket handler');
+            LogNotifier.removeHandler(handleLogEvent);
+        };
     }, []); // Empty dependency array = run once on mount
     
     return (
