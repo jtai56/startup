@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect} from 'react';
-import { GameNotifier, GameEvent } from './logNotifier.js';
+import { LogNotifier, LogEvent } from './logNotifier.js';
 
 export function Log() {
     const [logName, setLogName] = React.useState("")
@@ -50,16 +50,31 @@ export function Log() {
     };
     
 
-    const updateHours = (id, changeInt) => {
+    const updateHours = async (id, changeInt) => {
+        // Find and update the log
         const updatedLogs = logs.map(log => 
-            log.id === id ? {...log, hours: Math.max(0, log.hours + changeInt)} : log 
+          log.id === id ? {...log, hours: Math.max(0, log.hours + changeInt)} : log 
         );
         const updatedLog = updatedLogs.find(log => log.id === id);
         setLogs(updatedLogs);
+        
         if (updatedLog) {
-            updateLogOnServer(updatedLog);
+          await updateLogOnServer(updatedLog);
+          try {
+            const response = await fetch('/api/user', { credentials: 'include' });
+            if (response.ok) {
+              const userData = await response.json();
+              const userName = userData.email.split('@')[0]; //parses user name from email
+              
+              const message = `${userName} has now spent ${updatedLog.hours} hours on ${updatedLog.name}!`;
+              
+              LogNotifier.broadcastEvent(userName, LogEvent.End, { msg: message });
+            }
+          } catch (error) {
+            console.error('Error broadcasting update:', error);
+          }
         }
-    };
+      };
     
     useEffect(() => {
     // Load user's logs from server when component mounts
@@ -78,25 +93,31 @@ export function Log() {
     }
     loadLogs();
 
-    const interval = setInterval(() => {
-      const userName = `User-${Math.floor(Math.random() * 100)}`;
-      const time = Math.floor(Math.random() * 5) + 1;
-      const newActivity = `${userName} just spent ${time} hours on a skill!`;
+    
+    LogNotifier.addHandler(handleGameEvent);
+
+    // Cleanup when component unmounts 
+    return () => LogNotifier.removeHandler(handleGameEvent);
+   
+    // This was the placeholder for websocket!
+    // const interval = setInterval(() => {
+    //   const userName = `User-${Math.floor(Math.random() * 100)}`;
+    //   const time = Math.floor(Math.random() * 5) + 1;
+    //   const newActivity = `${userName} just spent ${time} hours on a skill!`;
 
       
-      setActivities(prev => [newActivity, ...prev].slice(0, 5)); // Keep last 5 activities
-    }, 5000);
+    //   setActivities(prev => [newActivity, ...prev].slice(0, 5)); // Keep last 5 activities
+    // }, 5000);
 
-    return () => clearInterval(interval);    // Cleanup when component unmounts
-    }, []);  //Doesn't need dependecies, just runs once on mount and then lets the interval keep going i guess
+    // return () => clearInterval(interval);    // Cleanup when component unmounts
+    // }, []);  //Doesn't need dependecies, just runs once on mount and then lets the interval keep going i guess
     
-    function handleGameEvent(event) {
-        // Only process log update events
-        if (event.type === GameEvent.End) {
+    function handleLogEvent(event) {
+        if (event.type === logEvent.End) {
           const message = event.value.msg;
-          // Add to activities list (same as before, but now REAL data!)
           setActivities(prev => [message, ...prev].slice(0, 5));
         }
+    }
     
     return (
     <main className="logpage">

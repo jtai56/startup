@@ -1,7 +1,7 @@
-const GameEvent = {
+const LogEvent = {
   System: 'system',
-  End: 'gameEnd',
-  Start: 'gameStart',
+  End: 'logEnd',
+  Start: 'logStart',
 };
 
 class EventMessage {
@@ -12,7 +12,7 @@ class EventMessage {
   }
 }
 
-class GameEventNotifier {
+class LogEventNotifier {
   events = [];
   handlers = [];
 
@@ -21,10 +21,10 @@ class GameEventNotifier {
     const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
     this.socket = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
     this.socket.onopen = (event) => {
-      this.receiveEvent(new EventMessage('Level Up', GameEvent.System, { msg: 'connected' }));
+      this.receiveEvent(new EventMessage('Level Up', LogEvent.System, { msg: 'connected' }));
     };
     this.socket.onclose = (event) => {
-      this.receiveEvent(new EventMessage('Level Up', GameEvent.System, { msg: 'disconnected' }));
+      this.receiveEvent(new EventMessage('Level Up', LogEvent.System, { msg: 'disconnected' }));
     };
     this.socket.onmessage = async (msg) => {
       try {
@@ -50,13 +50,11 @@ class GameEventNotifier {
   receiveEvent(event) {
     this.events.push(event);
 
-    this.events.forEach((e) => {
-      this.handlers.forEach((handler) => {
+    this.handlers.forEach((handler) => {
         handler(e);
       });
-    });
   }
 }
 
-const GameNotifier = new GameEventNotifier();
-export { GameEvent, GameNotifier };
+const LogNotifier = new LogEventNotifier();
+export { LogEvent, LogNotifier };
